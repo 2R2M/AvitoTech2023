@@ -1,0 +1,59 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:15
+    container_name: "postgres_avito"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Fa22cc33
+      POSTGRES_DB: avito
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - db-volume:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - api
+
+  golang:
+    container_name: "api-service_avito"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    build:
+      dockerfile: deploy/Dockerfile
+      context: .
+    ports:
+      - "0.0.0.0:8080:8085"
+    networks:
+      - api
+    links:
+      - postgres
+
+  pgadmin:
+    container_name: pgadmin_avito
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - api
+
+volumes:
+  db-volume:
+    name: db-volume
+
+networks:
+  api:
+    external: true
+    name: api

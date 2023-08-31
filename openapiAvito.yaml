@@ -1,0 +1,326 @@
+openapi: 3.0.3
+info:
+  title: Swagger AvitoTech 2023 - OpenAPI 3.0
+  description: Api for backend-trainee-assignment-2023
+  version: 1.0.11
+servers:
+  - url: localhost:8085/api/v1
+paths:
+  /user:
+    post:
+      tags:
+        - api
+      description: "Create User"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUserResponse'
+        '400':
+          description: error in request
+        '500':
+          description: server error
+    
+  /segment:
+    post:
+      tags:
+        - api
+      description: "Create segment"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSegmentRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSegmentResponse'
+        '400':
+          description: error in request
+        '500':
+          description: server error    
+  
+  /users/{id}/segments:
+    post:
+      tags:
+        - api
+      description: "Add segments for user"
+      parameters:
+        - name: id
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOperationRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateOperationResponse'
+        '400':
+          description: error in request
+        '500':
+          description: server error
+
+    delete:
+      tags:
+        - api
+      description: "Add segments for user"
+      parameters:
+        - name: id
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDeleteOperationRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateODeleteOperationResponse'
+        '400':
+          description: error in request
+        '500':
+          description: server error
+
+    get:
+      tags:
+        - api
+      description: Get user's slugs
+      parameters:
+        - name: id
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUsersSlugsResponse'
+        '500':
+          description: Server error
+
+
+  /report/{month}/{year}:
+    get:
+      tags:
+        - api
+      description: Get report for a specific month and year
+      parameters:
+        - name: year
+          in: path
+          description: Year of the report
+          required: true
+          schema:
+            type: integer
+        - name: month
+          in: path
+          description: Month of the report
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetReportResponse'
+        '400':
+          description: Bad request
+        '500':
+          description: Server error
+
+  /download/{filename}:
+    get:
+      tags:
+        - Download
+      description: Download a specific file
+      parameters:
+        - name: filename
+          in: path
+          description: Name of the file to download
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Bad request
+        '500':
+          description: Server error
+
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        ID:
+          type: string
+          example: "1"
+    
+    Segment:
+      type: object
+      properties:
+        Slug:
+          type: string
+          example: "AVITO_TEST_TEST"
+    Operation:
+      type: object
+      properties:
+        ID:
+          type: string
+          example: "1"
+        UserId:
+          type: string
+          example: "user123"
+        Segment:
+          type: array
+          items:
+            type: string
+          example: ["AVITO_TEST_TEST", "AVITO_TEST_TEST2"]
+        ExpiredAt:
+          type: string
+          format: date-time
+          example: "2022-01-01 00:00:00"
+   
+    CreateUserRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "1"
+      
+    CreateUserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "1"
+    
+    CreateSegmentRequest:
+      type: object
+      properties:
+        slug:
+          type: string
+          example: "AVITO_TEST_TEST"
+    
+    
+    CreateSegmentResponse:
+      type: object
+      properties:
+        slug:
+          type: string
+          example: "AVITO_TEST_TEST"
+      
+    CreateOperationRequest:
+      type: object
+      properties:
+        slugs:
+          type: array
+          items:
+            type: string
+          example: ["AVITO_TEST_TEST", "AVITO_TEST_TEST2"]
+        expired_at:
+          type: string
+          example: "2022-01-01 00:00:00"
+    
+    CreateOperationResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "09fe49b3-4d2b-471c-ac04-36c9e706b85f"
+        slugs:
+          type: array
+          items:
+            type: string
+          example: ["AVITO_TEST_TEST", "AVITO_TEST_TEST2"]
+        user_id:
+          type: string
+          example: "1"
+        expired_at:
+          type: string
+          example: "2022-01-01 00:00:00"      
+
+    CreateDeleteOperationRequest:
+      type: object
+      properties:
+        slugs:
+          type: array
+          items:
+            type: string
+          example: ["AVITO_TEST_TEST", "AVITO_TEST_TEST2"]
+
+    
+    CreateODeleteOperationResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "09fe49b3-4d2b-471c-ac04-36c9e706b85f"
+        slugs:
+          type: array
+          items:
+            type: string
+          example: ["AVITO_TEST_TEST", "AVITO_TEST_TEST2"]
+        user_id:
+          type: string
+          example: "1"
+      
+            
+    GetUsersSlugsResponse:
+      type: object
+      properties:
+        slugs:
+          type: array
+          items:
+            type: string
+          example: ["AVITO_TEST_TEST", "AVITO_TEST_TEST2"] 
+    
+    
+    GetReportResponse:
+      type: object
+      properties:
+        download_link:
+          type: string
+          example: "download/report_2023_7.csv"
