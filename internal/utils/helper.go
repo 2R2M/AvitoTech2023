@@ -33,7 +33,6 @@ func ManageDBUserSegment(ctx context.Context, db *sqlx.DB) {
 
 			}
 			for _, operation := range operations {
-
 				qStatusUpdateUser := `UPDATE operation SET status = :status WHERE id=:id`
 				type User struct {
 					ID string `db:"id"`
@@ -52,6 +51,7 @@ func ManageDBUserSegment(ctx context.Context, db *sqlx.DB) {
 					}
 
 				}
+
 				type Segment struct {
 					Slug string `db:"slug"`
 				}
@@ -65,10 +65,10 @@ func ManageDBUserSegment(ctx context.Context, db *sqlx.DB) {
 						"status": "ERROR",
 					})
 					if errUpdateStatus != nil {
+
 						slog.Errorf("check slug: %v", err.Error())
 					}
 				}
-
 				if errGetUser == nil && errGetSlug == nil {
 					switch operation.OpType {
 					case "ADD":
@@ -129,7 +129,7 @@ func ManageDBUserSegment(ctx context.Context, db *sqlx.DB) {
 				case <-ctx.Done():
 					slog.Error("Data copying stopped.")
 					return
-				case <-time.After(time.Microsecond):
+				case <-time.After(time.Second):
 				}
 			}
 

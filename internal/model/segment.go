@@ -1,10 +1,9 @@
 package model
 
 type Segment struct {
-	Slug    string
-	Percent float64
+	Slug string
 }
 
-func NewSegment(Slug string, Percent float64) *Segment {
-	return &Segment{Slug: Slug, Percent: Percent}
+func NewSegment(Slug string) *Segment {
+	return &Segment{Slug: Slug}
 }

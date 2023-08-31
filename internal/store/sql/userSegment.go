@@ -16,7 +16,6 @@ type UserSegmentRepository struct {
 }
 
 func (s UserSegmentRepository) AddUsersSegment(ctx context.Context, operation *model.Operation) (*model.Operation, error) {
-
 	timeRes := sql.NullTime{}
 	expiredAtTime, errTime := time.Parse("2006-01-02 15:04:05", operation.ExpiredAt)
 	if errTime != nil {
@@ -38,6 +37,7 @@ func (s UserSegmentRepository) AddUsersSegment(ctx context.Context, operation *m
 		}
 
 	}
+
 	return &model.Operation{
 		ID:        operation.ID,
 		UserId:    operation.UserId,
@@ -87,8 +87,7 @@ func (s UserSegmentRepository) CreateSegment(ctx context.Context, segment *model
 	q := `INSERT INTO segment(slug, percent) VALUES (:slug, :percent)`
 
 	_, createSQLErr := s.store.db.NamedExecContext(ctx, q, map[string]any{
-		"slug":    segment.Slug,
-		"percent": segment.Percent,
+		"slug": segment.Slug,
 	})
 	if createSQLErr != nil {
 		return nil, fmt.Errorf("repo create segment: %w", createSQLErr)

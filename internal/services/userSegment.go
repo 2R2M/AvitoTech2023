@@ -30,7 +30,7 @@ func (s UserSegmentService) CreateUser(ctx context.Context, in *model.User) (*mo
 }
 
 func (s UserSegmentService) CreateSegment(ctx context.Context, in *model.Segment) (*model.Segment, error) {
-	segment := model.NewSegment(in.Slug, in.Percent)
+	segment := model.NewSegment(in.Slug)
 	newSegment, err := s.userSegmentRepo.CreateSegment(ctx, segment)
 	if err != nil {
 		return nil, fmt.Errorf("service create segment: %w", err)
